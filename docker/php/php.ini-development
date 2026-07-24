@@ -1,0 +1,12 @@
+[PHP]
+memory_limit = 512M
+upload_max_filesize = 50M
+post_max_size = 50M
+display_errors = On
+error_reporting = E_ALL
+
+[Xdebug]
+xdebug.mode = debug
+xdebug.start_with_request = trigger
+; Специальный DNS, который указывает на твой компьютер из контейнера
+xdebug.client_host = host.docker.internal

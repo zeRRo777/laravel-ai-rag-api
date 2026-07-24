@@ -1,0 +1,57 @@
+# Локальная среда и секреты
+.env
+.env.*
+!.env.example
+
+# Зависимости (будут установлены в контейнере)
+/vendor
+/node_modules
+
+# Логи и кэш фреймворка
+/storage/logs/
+/storage/framework/cache/
+/storage/framework/sessions/
+/storage/framework/views/
+/storage/framework/testing/
+/bootstrap/cache/
+.phpunit.result.cache
+
+# Система контроля версий
+.git
+.gitignore
+.gitattributes
+
+# Документация и служебные файлы
+README.md
+*.md
+LICENSE
+.editorconfig
+.prettierrc
+.styleci.yml
+
+# Файлы IDE и ОС
+.idea
+.vscode
+*.sublime-*
+.DS_Store
+Thumbs.db
+
+# Временные и бэкапные файлы
+*.log
+*.sql
+*.sqlite
+*.swp
+*.backup
+
+# Инструменты фронтенда (если не собираешь их в контейнере)
+/package-lock.json
+/yarn.lock
+/webpack.mix.js
+/vite.config.js
+/postcss.config.js
+/tailwind.config.js
+/resources/js
+/resources/css
+
+# Папка для загрузок пользователей (обычно монтируется как volume)
+/storage/app/public

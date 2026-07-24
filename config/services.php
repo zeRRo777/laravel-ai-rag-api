@@ -34,5 +34,12 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
-
+    'ai' => [
+        'url' => env('AI_API_URL'),
+        'key' => env('AI_API_KEY'),
+    ],
+    'ollama' => [
+        'url' => env('OLLAMA_HOST', 'http://ollama:11434'),
+        'model' => env('OLLAMA_EMBEDDING_MODEL', 'nomic-embed-text')
+    ]
 ];
