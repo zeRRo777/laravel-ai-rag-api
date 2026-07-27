@@ -15,6 +15,116 @@
         }
     ],
     "paths": {
+        "/api/v1/chat": {
+            "post": {
+                "tags": [
+                    "Chat"
+                ],
+                "summary": "Задать вопрос AI-ассистенту (RAG)",
+                "description": "Принимает вопрос пользователя, ищет наиболее релевантные фрагменты текста в векторной базе данных (pgvector) и генерирует ответ через LLM, опираясь исключительно на найденный корпоративный контекст.",
+                "operationId": "74f81ad1246fab0bcd02bd9414843fde",
+                "requestBody": {
+                    "description": "Данные запроса",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "question"
+                                ],
+                                "properties": {
+                                    "question": {
+                                        "description": "Текст вопроса пользователя",
+                                        "type": "string",
+                                        "example": "Сколько дней отпуска я могу взять минимум за один раз?",
+                                        "maxLength": 1000,
+                                        "minLength": 3
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ от нейросети",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "answer": {
+                                            "description": "Сгенерированный ответ ИИ на основе базы знаний",
+                                            "type": "string",
+                                            "example": "Согласно регламенту, отпуск можно дробить, но одна из частей должна быть не менее 14 дней."
+                                        },
+                                        "sourceIds": {
+                                            "description": "Массив ID документов (чанков), которые использовались в качестве контекста для формирования ответа (полезно для вывода сносок в UI)",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "integer"
+                                            },
+                                            "example": [
+                                                2,
+                                                5
+                                            ]
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации (пустой или слишком короткий вопрос)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "example": "http://localhost:8080/errors/validation-error"
+                                        },
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Validation Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 422
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "Произошла одна или несколько ошибок проверки."
+                                        },
+                                        "instance": {
+                                            "type": "string",
+                                            "example": "/api/v1/chat"
+                                        },
+                                        "errors": {
+                                            "description": "Список ошибок валидации",
+                                            "type": "object",
+                                            "example": {
+                                                "question": [
+                                                    "Вопрос должен содержать не менее 3 символов."
+                                                ]
+                                            },
+                                            "additionalProperties": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/documents/ingest": {
             "post": {
                 "tags": [
@@ -124,6 +234,10 @@
         }
     },
     "tags": [
+        {
+            "name": "Chat",
+            "description": "Chat"
+        },
         {
             "name": "Documents",
             "description": "Documents"
