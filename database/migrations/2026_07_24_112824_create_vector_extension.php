@@ -18,8 +18,5 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down(): void
-    {
-        Schema::dropIfExists('vector_extension');
-    }
+    public function down(): void {}
 };

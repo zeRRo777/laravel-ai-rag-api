@@ -11,12 +11,4 @@ class Document extends Model
     use HasFactory;
 
     protected $guarded = [];
-
-    #[Override]
-    protected function casts()
-    {
-        return [
-            'embedding' => 'array',
-        ];
-    }
 }

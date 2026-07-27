@@ -1,0 +1,132 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Laravel ai rag api v1",
+        "description": "API для ai rag project",
+        "contact": {
+            "email": "test@example.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8080",
+            "description": "Local Development Server"
+        }
+    ],
+    "paths": {
+        "/api/v1/documents/ingest": {
+            "post": {
+                "tags": [
+                    "Documents"
+                ],
+                "summary": "Загрузка текста для векторизации",
+                "description": "Принимает текст документа, разбивает его на смысловые части (абзацы) и ставит в очередь на получение эмбеддингов (векторизацию) через AI (Ollama).",
+                "operationId": "ba99b930f624240aa83e36f777b28e18",
+                "requestBody": {
+                    "description": "Данные документа в формате JSON",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "content"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "description": "Заголовок документа",
+                                        "type": "string",
+                                        "example": "Основы Laravel AI"
+                                    },
+                                    "content": {
+                                        "description": "Текст документа. Для корректного разделения на чанки используйте двойной перенос строки (\\n\\n).",
+                                        "type": "string",
+                                        "example": "Первый абзац про Laravel.\n\nВторой абзац про AI RAG."
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Документ успешно принят, разбит на части и отправлен в очередь.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Документ успешно разбит на части и добавлен в очередь на векторизацию."
+                                        },
+                                        "processedCount": {
+                                            "description": "Количество созданных чанков (задач в очереди)",
+                                            "type": "integer",
+                                            "example": 2
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации (например, не передан контент)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "example": "http://localhost:8080/errors/validation-error"
+                                        },
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Validation Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 422
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "Произошла одна или несколько ошибок проверки."
+                                        },
+                                        "instance": {
+                                            "type": "string",
+                                            "example": "/api/v1/documents/ingest"
+                                        },
+                                        "errors": {
+                                            "description": "Список ошибок валидации",
+                                            "type": "object",
+                                            "example": {
+                                                "content": [
+                                                    "Поле content обязательно для заполнения."
+                                                ]
+                                            },
+                                            "additionalProperties": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Documents",
+            "description": "Documents"
+        }
+    ]
+}
