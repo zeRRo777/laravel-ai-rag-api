@@ -4,14 +4,9 @@ namespace App\CQRT\Commands;
 
 use App\Data\IngestDocumentData;
 use App\Jobs\VectorizeAndSaveChunkJob;
-use App\Services\AIAssistantService;
 
 class IngestCommand
 {
-    public function __construct(
-        private readonly AIAssistantService $aiService
-    ) {}
-
     public function __invoke(IngestDocumentData $data): int
     {
         $chunks = $this->chunkText($data->content);

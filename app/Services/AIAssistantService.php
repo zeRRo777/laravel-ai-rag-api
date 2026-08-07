@@ -7,9 +7,11 @@ use App\Exceptions\AI\AIApiException;
 use App\Models\Document;
 use Exception;
 use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class AIAssistantService
 {
@@ -30,7 +32,7 @@ class AIAssistantService
             $response = Http::acceptJson()
                 ->connectTimeout(3)
                 ->timeout(30)
-                ->retry(3, 500, function (Exception $exception, $request) {
+                ->retry(3, 500, function (Throwable $exception, PendingRequest $request) {
                     if ($exception instanceof ConnectionException) {
                         return true;
                     }
@@ -45,8 +47,8 @@ class AIAssistantService
                 ->post($url, $payload);
         } catch (ConnectionException|RequestException $e) {
             Log::error('API ИИ не отвечает: '.$e->getMessage(), [
-                'status' => $e->response?->status(),
-                'body' => $e->response?->body(),
+                'status' => $e->response->status(),
+                'body' => $e->response->body(),
             ]);
 
             throw new AIApiException('Api ии временно недоступен.');
@@ -137,7 +139,7 @@ class AIAssistantService
                 ->retry(
                     3,
                     500,
-                    function (Exception $exception, $request) {
+                    function (Throwable $exception, PendingRequest $request) {
                         if ($exception instanceof ConnectionException) {
                             return true;
                         }
@@ -153,8 +155,8 @@ class AIAssistantService
                 ->throw();
         } catch (ConnectionException|RequestException $e) {
             Log::error('API ИИ не отвечает: '.$e->getMessage(), [
-                'status' => $e->response?->status(),
-                'body' => $e->response?->body(),
+                'status' => $e->response->status(),
+                'body' => $e->response->body(),
             ]);
 
             throw new AIApiException('Api ии временно недоступен.');
