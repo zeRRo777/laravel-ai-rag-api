@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Data\ChatData;
-use App\Http\Controllers\Api\V1\Controller;
 use App\Services\AIAssistantService;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use OpenApi\Attributes as OA;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ChatController extends Controller
 {
@@ -28,7 +27,7 @@ class ChatController extends Controller
                         description: 'Текст вопроса пользователя',
                         minLength: 3,
                         maxLength: 1000
-                    )
+                    ),
                 ]
             )
         ),
@@ -51,7 +50,7 @@ class ChatController extends Controller
                             description: 'Массив ID документов (чанков), которые использовались в качестве контекста для формирования ответа (полезно для вывода сносок в UI)',
                             items: new OA\Items(type: 'integer'),
                             example: [2, 5]
-                        )
+                        ),
                     ]
                 )
             ),
@@ -75,12 +74,12 @@ class ChatController extends Controller
                                 items: new OA\Items(type: 'string')
                             ),
                             example: [
-                                'question' => ['Вопрос должен содержать не менее 3 символов.']
+                                'question' => ['Вопрос должен содержать не менее 3 символов.'],
                             ]
-                        )
+                        ),
                     ]
                 )
-            )
+            ),
         ]
     )]
     public function chat(ChatData $data, AIAssistantService $aIAssistantService): JsonResponse

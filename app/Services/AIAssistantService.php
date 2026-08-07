@@ -3,12 +3,12 @@
 namespace App\Services;
 
 use App\Data\RAGAnswerData;
-use Exception;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Http\Client\ConnectionException;
-use Illuminate\Http\Client\RequestException;
 use App\Exceptions\AI\AIApiException;
 use App\Models\Document;
+use Exception;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\RequestException;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class AIAssistantService
@@ -18,12 +18,12 @@ class AIAssistantService
      */
     public function getEmbedding(string $text): array
     {
-        $url = config('services.ollama.url') . '/v1/embeddings';
+        $url = config('services.ollama.url').'/v1/embeddings';
         $model = config('services.ollama.model');
 
         $payload = [
             'model' => $model,
-            'input' => $text
+            'input' => $text,
         ];
 
         try {
@@ -43,10 +43,10 @@ class AIAssistantService
                 })
                 ->throw()
                 ->post($url, $payload);
-        } catch (ConnectionException | RequestException $e) {
-            Log::error('API ИИ не отвечает: ' . $e->getMessage(), [
+        } catch (ConnectionException|RequestException $e) {
+            Log::error('API ИИ не отвечает: '.$e->getMessage(), [
                 'status' => $e->response?->status(),
-                'body'   => $e->response?->body(),
+                'body' => $e->response?->body(),
             ]);
 
             throw new AIApiException('Api ии временно недоступен.');
@@ -58,10 +58,10 @@ class AIAssistantService
 
         $result = $response->json('data.0.embedding');
 
-        if (empty($result) || !is_array($result)) {
+        if (empty($result) || ! is_array($result)) {
             Log::error('Пустой или некорректный ответ от AI API', [
                 'response' => $response->body(),
-                'parsed'   => $result,
+                'parsed' => $result,
             ]);
             throw new AIApiException('AI API вернул пустой или некорректный ответ.');
         }
@@ -77,7 +77,7 @@ class AIAssistantService
         $question = trim($question);
 
         $embedding = $this->getEmbedding($question);
-        $vectorString = '[' . implode(',', $embedding) . ']';
+        $vectorString = '['.implode(',', $embedding).']';
         $threshold = 0.35;
 
         $documents = Document::query()
@@ -90,18 +90,18 @@ class AIAssistantService
         if ($documents->isEmpty()) {
             return RAGAnswerData::from([
                 'answer' => 'Извините, я не нашел информации по вашему вопросу в базе знаний.',
-                'sourceIds' => []
+                'sourceIds' => [],
             ]);
         }
 
-        $contextString = $documents->map(fn($doc) => "Документ #{$doc->id}:\n{$doc->content}")->implode("\n\n");
+        $contextString = $documents->map(fn ($doc) => "Документ #{$doc->id}:\n{$doc->content}")->implode("\n\n");
         $sourceIds = $documents->pluck('id')->toArray();
 
         $answer = $this->generateLLMResponse($question, $contextString);
 
         return RAGAnswerData::from([
             'answer' => $answer,
-            'sourceIds' => $sourceIds
+            'sourceIds' => $sourceIds,
         ]);
     }
 
@@ -114,18 +114,18 @@ class AIAssistantService
         $token = config('services.ai.key');
         $model = config('services.ai.model');
 
-        $systemPrompt = "Ты — корпоративный ИИ-ассистент. Отвечай на вопрос пользователя, опираясь ТОЛЬКО на предоставленный контекст.\n" .
-            "Если в контексте нет ответа на вопрос, честно скажи: \"Я не знаю ответа на этот вопрос на основе предоставленной базы знаний\".\n" .
-            "Не придумывай информацию. Будь краток и вежлив.\n\n" .
+        $systemPrompt = "Ты — корпоративный ИИ-ассистент. Отвечай на вопрос пользователя, опираясь ТОЛЬКО на предоставленный контекст.\n".
+            "Если в контексте нет ответа на вопрос, честно скажи: \"Я не знаю ответа на этот вопрос на основе предоставленной базы знаний\".\n".
+            "Не придумывай информацию. Будь краток и вежлив.\n\n".
             "КОНТЕКСТ:\n{$context}";
 
         $payload = [
-            'model'       => $model,
-            'messages'    => [
+            'model' => $model,
+            'messages' => [
                 ['role' => 'system', 'content' => $systemPrompt],
                 ['role' => 'user',   'content' => $question],
             ],
-            'stream'      => false,
+            'stream' => false,
             'temperature' => 0.1,
         ];
 
@@ -151,10 +151,10 @@ class AIAssistantService
                 )
                 ->post($url, $payload)
                 ->throw();
-        } catch (ConnectionException | RequestException $e) {
-            Log::error('API ИИ не отвечает: ' . $e->getMessage(), [
+        } catch (ConnectionException|RequestException $e) {
+            Log::error('API ИИ не отвечает: '.$e->getMessage(), [
                 'status' => $e->response?->status(),
-                'body'   => $e->response?->body(),
+                'body' => $e->response?->body(),
             ]);
 
             throw new AIApiException('Api ии временно недоступен.');
@@ -166,7 +166,7 @@ class AIAssistantService
 
         $content = $response->json('choices.0.message.content');
 
-        if (!is_string($content) || trim($content) === '') {
+        if (! is_string($content) || trim($content) === '') {
             Log::error('Пустой ответ от AI API при RAG-запросе', ['response' => $response->body()]);
             throw new AIApiException('AI API вернул пустой ответ.');
         }

@@ -4,7 +4,6 @@ namespace App\CQRT\Commands;
 
 use App\Data\IngestDocumentData;
 use App\Jobs\VectorizeAndSaveChunkJob;
-use App\Models\Document;
 use App\Services\AIAssistantService;
 
 class IngestCommand

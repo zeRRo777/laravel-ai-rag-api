@@ -2,7 +2,6 @@
 
 namespace App\Data;
 
-use Override;
 use Spatie\LaravelData\Data;
 
 class IngestDocumentData extends Data
@@ -16,7 +15,7 @@ class IngestDocumentData extends Data
     {
         return [
             'title' => 'Название',
-            'content' => 'Контент'
+            'content' => 'Контент',
         ];
     }
 }

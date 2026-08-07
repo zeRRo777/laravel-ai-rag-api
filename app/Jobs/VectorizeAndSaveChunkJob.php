@@ -27,11 +27,11 @@ class VectorizeAndSaveChunkJob implements ShouldQueue
     public function handle(AIAssistantService $aiService): void
     {
         $embeddingArray = $aiService->getEmbedding($this->content);
-        $vectorString = '[' . implode(',', $embeddingArray) . ']';
+        $vectorString = '['.implode(',', $embeddingArray).']';
 
         Document::create([
-            'title'     => $this->title,
-            'content'   => $this->content,
+            'title' => $this->title,
+            'content' => $this->content,
             'embedding' => $vectorString,
         ]);
     }

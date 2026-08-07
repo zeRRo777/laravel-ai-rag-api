@@ -11,12 +11,11 @@ use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        web: __DIR__ . '/../routes/web.php',
-        api: __DIR__ . '/../routes/api.php',
-        commands: __DIR__ . '/../routes/console.php',
+        web: __DIR__.'/../routes/web.php',
+        api: __DIR__.'/../routes/api.php',
+        commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
@@ -25,10 +24,10 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions): void {
         $renderForbiddenResponse = function (AccessDeniedHttpException|AuthorizationException $e, Request $request): JsonResponse {
             return response()->json([
-                'type'     => config('app.url') . '/errors/forbidden',
-                'title'    => 'You not authorized',
-                'status'   => 403,
-                'detail'   => 'Доступ к ресурсу запрещен!',
+                'type' => config('app.url').'/errors/forbidden',
+                'title' => 'You not authorized',
+                'status' => 403,
+                'detail' => 'Доступ к ресурсу запрещен!',
                 'instance' => $request->getUri(),
             ], 403);
         };
@@ -43,8 +42,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(function (ValidationException $e, Request $request) {
             if ($request->is('api/*')) {
                 return response()->json([
-                    'type'   => config('app.url') . '/errors/validation-error',
-                    'title'  => 'Validation Error',
+                    'type' => config('app.url').'/errors/validation-error',
+                    'title' => 'Validation Error',
                     'status' => 422,
                     'detail' => 'Произошла одна или несколько ошибок проверки.',
                     'instance' => $request->getUri(),
@@ -56,8 +55,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(function (AuthenticationException $e, Request $request) {
             if ($request->is('api/*')) {
                 return response()->json([
-                    'type'   => config('app.url') . '/errors/unauthorized',
-                    'title'  => 'You not authorized',
+                    'type' => config('app.url').'/errors/unauthorized',
+                    'title' => 'You not authorized',
                     'status' => 401,
                     'detail' => 'Доступ к ресурсу доступен только авторизованным пользователям!',
                     'instance' => $request->getUri(),
@@ -68,7 +67,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(function (NotFoundHttpException $e, Request $request) {
             if ($request->is('api/*')) {
                 return response()->json([
-                    'type' => config('app.url') . '/errors/not-found',
+                    'type' => config('app.url').'/errors/not-found',
                     'title' => 'Not Found',
                     'status' => 404,
                     'detail' => $e->getMessage(),

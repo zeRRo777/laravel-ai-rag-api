@@ -37,10 +37,10 @@ return [
     'ai' => [
         'url' => env('AI_API_URL'),
         'key' => env('AI_API_KEY'),
-        'model' => env('AI_API_MODEL', 'llama-3.3-70b-versatile')
+        'model' => env('AI_API_MODEL', 'llama-3.3-70b-versatile'),
     ],
     'ollama' => [
         'url' => env('OLLAMA_HOST', 'http://ollama:11434'),
-        'model' => env('OLLAMA_EMBEDDING_MODEL', 'nomic-embed-text')
-    ]
+        'model' => env('OLLAMA_EMBEDDING_MODEL', 'nomic-embed-text'),
+    ],
 ];

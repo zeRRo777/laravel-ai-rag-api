@@ -4,9 +4,8 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\CQRT\Commands\IngestCommand;
 use App\Data\IngestDocumentData;
-use App\Http\Controllers\Api\V1\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use OpenApi\Attributes as OA;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class DocumentController extends Controller
 {
@@ -32,7 +31,7 @@ class DocumentController extends Controller
                         type: 'string',
                         example: "Первый абзац про Laravel.\n\nВторой абзац про AI RAG.",
                         description: 'Текст документа. Для корректного разделения на чанки используйте двойной перенос строки (\n\n).'
-                    )
+                    ),
                 ]
             )
         ),
@@ -53,7 +52,7 @@ class DocumentController extends Controller
                             type: 'integer',
                             example: 2,
                             description: 'Количество созданных чанков (задач в очереди)'
-                        )
+                        ),
                     ]
                 )
             ),
@@ -77,12 +76,12 @@ class DocumentController extends Controller
                                 items: new OA\Items(type: 'string')
                             ),
                             example: [
-                                'content' => ['Поле content обязательно для заполнения.']
+                                'content' => ['Поле content обязательно для заполнения.'],
                             ]
-                        )
+                        ),
                     ]
                 )
-            )
+            ),
         ]
     )]
     public function ingest(IngestDocumentData $data, IngestCommand $ingestCommand): JsonResponse
@@ -91,7 +90,7 @@ class DocumentController extends Controller
 
         return response()->json([
             'message' => 'Документ успешно разбит на части и добавлен в очередь на векторизацию.',
-            'processedCount' => $proccessedCount
+            'processedCount' => $proccessedCount,
         ]);
     }
 }
